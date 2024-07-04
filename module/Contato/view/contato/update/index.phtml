@@ -1,0 +1,42 @@
+<?php
+$title = 'Atualização de contato';
+$this->headTitle($title.' - '.$cliente->getNome());
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<h4>Cliente: <?= $cliente->getNome() ?></h4>
+
+<?php if (isset($error)): ?>
+  <div class="alert alert-danger" role="alert"><?= $this->escapeHtml($error) ?></div>
+<?php endif; ?>
+<?php
+if (!empty($form)) :
+  $form->setAttribute('action', $this->url('contatos/update', ['clienteId' => $cliente->getId(), 'id' => $id]));
+  $form->prepare();
+  echo $this->form()->openTag($form);
+  echo $this->formHidden($form->get('id_cliente'));
+?>
+   <div class="form-group">
+    <?= $this->formLabel($form->get('nome')) ?>
+    <?= $this->formElement($form->get('nome')) ?>
+    <?= $this->formElementErrors($form->get('nome')) ?>
+  </div>
+
+  <div class="form-group">
+    <?= $this->formLabel($form->get('email')) ?>
+    <?= $this->formElement($form->get('email')) ?>
+    <?= $this->formElementErrors($form->get('email')) ?>
+  </div>
+
+  <div class="form-group">
+    <?= $this->formLabel($form->get('cpf')) ?>
+    <?= $this->formElement($form->get('cpf')) ?>
+    <?= $this->formElementErrors($form->get('cpf')) ?>
+  </div>
+
+  <div>
+    <?= $this->formSubmit($form->get('submit')) ?>
+  </div>
+<?php
+  echo $this->form()->closeTag();
+endif;
+?>

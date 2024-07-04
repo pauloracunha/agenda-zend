@@ -1,0 +1,86 @@
+<div class="d-flex justify-content-between align-items-center">
+  <div class="mt-5">
+    <h2>Contatos</h2>
+    <h4>Cliente: <?= $cliente->getNome() ?></h4>
+  </div>
+  <a class="btn btn-primary" href="<?= $this->url('contatos/create', ['clienteId' => $cliente->getId()]) ?>" role="button">Adicionar Contato</a>
+</div>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Nome</th>
+      <th scope="col">E-mail</th>
+      <th scope="col">CPF</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php if (empty($this->contatos)) : ?>
+      <tr>
+        <td colspan="5">Nenhum contato encontrado</td>
+      </tr>
+    <?php else : ?>
+      <?php foreach ($this->contatos as $contato) : ?>
+        <tr>
+          <th scope="row"><?= $contato->getId() ?></th>
+          <td><?= $contato->getNome() ?></td>
+          <td><?= $contato->getEmail() ?></td>
+          <td><?= $contato->getCPF() ?></td>
+          <td>
+            <!-- <a href="<?php //$this->url('contatos', ['id' => $contato->getId()]) ?>" class="btn btn-primary"><i class="fa-regular fa-address-book"></i></a> -->
+            <a href="<?= $this->url('contatos/update', ['clienteId' => $cliente->getId(), 'id' => $contato->getId()]) ?>"><i class="fa-regular fa-pen-to-square"></i></a>
+            <button type="button" class="btn btn-link text-danger" data-toggle="modal" data-target="#confirmDeleteModal" data-contato-id="<?= $contato->getId() ?>" data-contato-nome="<?= $contato->getNome() ?>">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      <?php endforeach; ?>
+    <?php endif; ?>
+  </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmDeleteModalLabel">Tem certeza disto?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Tem certeza que deseja excluir este contato?<br>
+        Contato: <strong class="contato-nome"></strong>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger delete-btn" onclick="excluirContato(this)">Excluir</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $('#confirmDeleteModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var contatoId = button.data('contato-id')
+    var contatoNome = button.data('contato-nome')
+    var modal = $(this)
+    modal.find('.modal-body .contato-nome').text(contatoNome)
+    modal.find('.modal-footer .delete-btn').attr('data-contato-id', contatoId)
+  })
+  function excluirContato(element) {
+    var contatoId = $(element).data('contato-id')
+    fetch('<?= $this->url('contatos/delete', ['clienteId' => $cliente->getId()]) ?>/'+contatoId, {
+      method: 'POST'
+    }).then(response => {
+      if (response.ok) {
+        window.location.reload()
+      }
+    }).catch(error => {
+      console.error('Erro ao excluir contato', error)
+    })
+  }
+</script>

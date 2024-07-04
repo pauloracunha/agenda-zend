@@ -1,0 +1,48 @@
+<?php
+$title = 'Cadastro de cliente';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+
+<?php if (isset($error)): ?>
+  <div class="alert alert-danger" role="alert"><?= $this->escapeHtml($error) ?></div>
+<?php endif; ?>
+<?php
+if (!empty($form)) :
+  $form->setAttribute('action', $this->url('cliente.create'));
+  $form->prepare();
+  echo $this->form()->openTag($form);
+?>
+  <div class="form-group">
+    <?= $this->formLabel($form->get('nome')) ?>
+    <?= $this->formElement($form->get('nome')) ?>
+    <?= $this->formElementErrors($form->get('nome')) ?>
+  </div>
+
+  <div class="form-group">
+    <?= $this->formLabel($form->get('cnpj')) ?>
+    <?= $this->formElement($form->get('cnpj')) ?>
+    <?= $this->formElementErrors($form->get('cnpj')) ?>
+  </div>
+
+  <div class="form-group">
+    <?= $this->formLabel($form->get('endereco')) ?>
+    <?= $this->formElement($form->get('endereco')) ?>
+    <?= $this->formElementErrors($form->get('endereco')) ?>
+  </div>
+
+  <div class="form-group">
+    <label>Status</label>
+    <div class="form-check form-check-inline">
+      <?= $this->formElement($form->get('status')) ?>
+    </div>
+    <?= $this->formElementErrors($form->get('status')) ?>
+  </div>
+
+  <div>
+    <?= $this->formSubmit($form->get('submit')) ?>
+  </div>
+<?php
+  echo $this->form()->closeTag();
+endif;
+?>
